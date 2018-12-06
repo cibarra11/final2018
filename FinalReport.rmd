@@ -1,7 +1,7 @@
 ---
 title: "Abacavirinol"
-author: "Put your name here!"
-date: "put the date here"
+author: "Cindy Ibarra"
+date: "12/06/2018"
 output: html_document
 ---
 
@@ -9,6 +9,24 @@ output: html_document
 require(tidyverse)
 require(tigerstats)
 abac <-read.csv(file="abacavirinol.csv",header=TRUE)
+```
+```{r}
+LBGTguys = filter(abac,LBGT=="yes")
+```
+```{r}
+Female <- filter(abac,sex=="F")
+```
+```{r}
+Male <- filter(abac,sex=="M")
+```
+```{r}
+Druggies <-filter(abac,Ivdrug=="user")
+```
+```{r}
+DruggiesUse <- filter(abac,Ivdrug== "user")
+```
+```{r}
+LBGT <- filter(abac,LBGT=="yes")
 ```
 
 # Introduction
@@ -21,9 +39,30 @@ A new  preventative aides (abacavirinol) is under test in clinical trials. Analy
 
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method. Discuss what data manipulations may be needed for example subsetting or other binning procedures and what sort of graphical displays and inferential tools will be used!-->
 
+I will be testing each variable with different methods such as barchartGC, colPerc and rowPerc, chisqtestGC and fisher.test. They will fall into three categorize the graphical, numerical, and inferential results. 
+
+```{r}
+lbgtGrp <- filter(abac, LBGT == "yes")
+```
+```{r}
+sexgrp <- filter(abac, sex == "F")
+```
+```{r}
+sexgrp <- filter(abac, sex == "M")
+
+```
+```{r}
+infectedgrp <- filter(abac, infected == "aids")
+```
+```{r}
+infectedgrp <- filter(abac, infected == "none")
+```
+
+
 #Results
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
+
 
 ## Descriptive Results
 
@@ -31,15 +70,129 @@ A new  preventative aides (abacavirinol) is under test in clinical trials. Analy
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question. Bottom line is to explain the features of the graph that are relevant to conforming or departing to what is expected by your null hypothesis !-->
 
+Every participant
+```{r}
+results <- xtabs(~infected+treatment, data=abac)
+barchartGC(results, type ==  "percent")
+```
+
+
+Female
+```{r}
+femaleresults <- xtabs(~infected+treatment, data=Female)
+barchartGC(femaleresults, type ==  "percent")
+```
+
+Male
+```{r}
+maleresults <- xtabs(~infected+treatment, data=Male)
+barchartGC(maleresults, type ==  "percent")
+```
+
+LGBT graph
+```{r}
+lbgtresults <- xtabs(~infected+treatment, data=LBGT)
+barchartGC(lbgtresults, type ==  "percent")
+```
+
+Druggies
+```{r}
+druggiesusersresults <- xtabs(~infected+treatment, data= DruggiesUse)
+barchartGC(druggiesusersresults, type ==  "percent")
+```
+
 ### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+
+Every participant 
+```{r}
+colPerc(results)
+rowPerc(results)
+```
+
+Female and Male
+```{r}
+colPerc(femaleresults)
+rowPerc(femaleresults)
+```
+
+```{r}
+colPerc(maleresults)
+rowPerc(maleresults)
+```
+
+Drug Users
+```{r}
+colPerc(druggiesusersresults)
+rowPerc(druggiesusersresults)
+```
+
+LBGT
+```{r}
+colPerc(lbgtresults)
+rowPerc(lbgtresults)
+```
 
 ## Inferential Results
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
 
+Every participant
+```{r}
+chisqtestGC(results, graph = TRUE)
+```
+```{r}
+fisher.test(results)
+```
+
+We reject the null hypothesis since the P-Value = 0.0168 meaning that the drug is working for this group tested. 
+
+Female 
+```{r}
+chisqtestGC(femaleresults, graph = TRUE)
+
+```
+```{r}
+fisher.test(femaleresults)
+```
+
+We reject the null hypothesis for the female group because the p-value = 0.04911.
+
+Male
+```{r}
+chisqtestGC(maleresults, graph = TRUE)
+
+```
+```{r}
+fisher.test(maleresults)
+
+```
+
+We fail to reject the null hypothesis for the male group because the p-value = 4.352e-06.
+
+DrugUsers
+```{r}
+chisqtestGC(druggiesusersresults, graph = TRUE)
+```
+```{r}
+fisher.test(druggiesusersresults)
+```
+
+We reject the null hypothesis for the drugusers group because the p-value = 0.01929.
+
+LBGT
+```{r}
+chisqtestGC(lbgtresults, graph = TRUE)
+
+```
+```{r}
+fisher.test(lbgtresults)
+```
+
+We fail to reject the null hypothesis because the p-value = 0.05698.
 
 # Discussion and Conclusion
+Out of all the groups that were tested we can see that two of the groups fail to reject the null hypothesis and the other three reject the null hyothesis. The two that fail to reject the null hypothesis is the Male group and the LBGT group meaning that the medication for them was working when they were given the medication instead of the placebo. For the other groups the chance of them gettig aids increased so the medication in those groups was not working for them. 
 
 <!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
